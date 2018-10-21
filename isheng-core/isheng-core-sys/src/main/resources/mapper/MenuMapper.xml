@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.isheng.core.sys.mapper.MenuMapper">
+	<!-- 结果字段 -->
+	<sql id="columnSql">
+		id,
+		name, 
+		code, 
+		url, 
+		parentId, 
+		sort,
+		remark,
+		
+		createUser, 
+		createTime, 
+		updateUser, 
+		updateTime 
+	</sql>
+	
+	<sql id="insertSql">
+		#{id}, 
+		#{name},
+		#{code}, 
+		#{url},  
+		#{parentId}, 
+		#{sort},
+		#{remark},
+		
+		#{createUser}, 
+		#{createTime}, 
+		#{updateUser}, 
+		#{updateTime}
+	</sql>
+	
+	<!-- 更新字段 -->
+	<sql id="updateSql">
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="code != null">
+				code = #{code},
+			</if>
+			<if test="url != null">
+				url = #{url},
+			</if>
+			<if test="parentId > 0">
+				parentId = #{parentId},
+			</if>
+			<if test="sort > 0">
+				sort = #{sort},
+			</if>
+			<if test="sort > 0">
+				remark = #{remark},
+			</if>
+			<if test="createUser != null">
+				createUser = #{createUser},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+			<if test="updateUser != null">
+				updateUser = #{updateUser},
+			</if>
+			<if test="updateTime != null">
+				updateTime = #{updateTime},
+			</if>
+		</trim>
+	</sql>
+	
+	<!-- 查询语句 -->
+	<sql id="querySql">
+		<where>
+			<!-- <if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="createUser != null">
+				and createUser like CONCAT('%', #{createUser}, '%')
+			</if>
+			<if test="updateUser != null">
+				and updateUser like CONCAT('%', #{updateUser}, '%')
+			</if>
+			<if test="beginDate != null">
+				and createTime &gt;= #{beginDate, jdbcType=TIMESTAME}
+			</if>
+			<if test="endDate != null">
+				and createTime &lt;= #{endDate, jdbcType=TIMESTAME}
+			</if>
+			
+			<if test="name != null">
+				and name like CONCAT('%', #{name}, '%')
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="parentId != null">
+				and parentId = #{parentId}
+			</if> -->
+		</where>
+	</sql>
+	
+	<!-- 插入 -->
+	<insert id="insert" parameterType="com.isheng.core.sys.entity.Menu">
+		insert into menu (<include refid="columnSql"/>) values (<include refid="insertSql"/>)
+	</insert>
+
+	<!-- 删除-->
+	<delete id="delete" timeout="3000">
+		delete from menu where id=#{id}
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.isheng.core.sys.entity.Menu" timeout="3000">
+		update menu <include refid="updateSql"/> where id = #{id}
+	</update>
+	
+	<!-- 根据ID查询 -->
+	<select id="selectOne" resultType="com.isheng.core.sys.entity.Menu" timeout="3000">
+		select <include refid="columnSql" /> from menu where id=#{id}
+	</select>
+
+	<!-- 总记录数 -->
+	<select id="selectCount" parameterType="com.isheng.model.auth.request.MenuQuery" resultType="java.lang.Long" timeout="3000">
+		select count(id) from menu <include refid="querySql"/>
+	</select>
+	
+	<!-- 查询所有 -->
+	<select id="selectAll" resultMap="mapperResultMap" timeout="3000">
+		select <include refid="columnSql"/> from menu;
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="selectList" parameterType="com.isheng.model.auth.request.MenuQuery" resultMap="mapperResultMap" timeout="3000">
+		select <include refid="columnSql"/> from menu <include refid="querySql"/>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="selectLimit" resultMap="mapperResultMap" timeout="3000">
+		select <include refid="columnSql"/> from menu <include refid="querySql"/> order by sort ASC limit #{pageNo}, #{pageSize}
+	</select>
+	
+	<!-- 查询是否重复 -->
+	<select id="isExist" resultType="java.lang.Integer" timeout="3000">
+		select count(id) from menu where id != #{id} and ${column} = #{value}
+	</select>
+	
+	<!-- 查询用户的所有权限 -->
+	<select id="selectByUserId" parameterType="java.lang.String" resultMap="mapperResultMap" timeout="3000">
+		select <include refid="columnSql"/> from menu where id in 
+		( select menuId from roleMenu where roleId in 
+			( select roleId from userRole where userId = #{userId} )
+		)
+	</select>
+	
+	<!-- 查询角色的所有权限 -->
+	<select id="selectByRoleId" parameterType="java.lang.String" resultMap="mapperResultMap" timeout="3000">
+		select <include refid="columnSql"/> from menu where id in (select menuId from roleMenu where roleId = #{roleId})
+	</select>
+	
+	<!-- 查询多个角色的多个权限 -->
+	<select id="selectByRoles" parameterType="list" resultMap="mapperResultMap" timeout="3000">
+		select <include refid="columnSql"/> from menu where id in 
+		(select menuId from roleMenu where roleId in 
+			(
+				<foreach collection="roles" item="role" separator=",">
+					#{role.id}
+			 	</foreach>
+			 )
+		)
+	</select>
+
+</mapper>

@@ -1,0 +1,28 @@
+##服务端口和项目名称
+server:
+  port: 9991
+  servlet:
+    context-path: /isheng-core-sys
+
+# mybatis配置
+mybatis: 
+  type-aliases-package: com.isheng.core.sys
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  configuration:
+    call-setters-on-nulls: true
+        
+# spring配置
+spring: 
+  application:
+    name: isheng-core-sys
+  profiles:
+    active: dev
+    
+
+      
+      
+   
+    
+    
+  
+  
