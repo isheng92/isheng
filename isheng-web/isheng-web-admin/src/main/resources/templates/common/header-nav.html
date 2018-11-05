@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" style="overflow-x:auto;overflow-y:auto;">
+<ul id="menu" class="nav" style="*white-space: nowrap; float: none;">
+	<li class="menu" th:each="menu:${menuList}">
+		<a class="menu" href="javascript:" th:href="'/jeesite/a/sys/menu/tree?parentId=' + ${menu.id}" th:attr="data-id=${menu.id}"><span th:text="${menu.name}"></span></a>
+	</li>
+	<li class="menu active">
+		<a class="menu" href="javascript:" data-href="/jeesite/a/sys/menu/tree?parentId=b4b42c3336de46238a3e3612b0d7b39f" data-id="b4b42c3336de46238a3e3612b0d7b39f"><span>消息管理</span></a>
+	</li>
+</ul>
+</html>

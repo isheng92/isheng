@@ -1,5 +1,7 @@
 package com.isheng.common.exception;
 
+import com.isheng.common.enums.ErrMsg;
+
 /**
  * 基础异常类
  * @author Administrator
@@ -21,6 +23,16 @@ public class BizException extends RuntimeException {
 	
 	public BizException(String msg) {
 		super(msg);
+	}
+	
+	public BizException(ErrMsg errMsg) {
+		super(errMsg.getText());
+		this.code = errMsg.getCode();
+	}
+	
+	public BizException(ErrMsg errMsg, Throwable throwable) {
+		super(errMsg.getText(), throwable);
+		this.code = errMsg.getCode();
 	}
 
 	public BizException(int code, String msg) {

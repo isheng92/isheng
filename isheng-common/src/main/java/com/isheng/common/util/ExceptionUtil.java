@@ -2,7 +2,7 @@ package com.isheng.common.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
-import com.isheng.common.constant.Constant;
+import com.isheng.common.constant.Global;
 import com.isheng.common.enums.ErrMsg;
 import com.isheng.common.exception.BizException;
 
@@ -24,8 +24,8 @@ public class ExceptionUtil {
 	 */
 	public static ModelAndView exceptionHandler(Exception e, String errView) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject(Constant.EXCEPTION_CODE_KEY, getErrCode(e));
-		mv.addObject(Constant.EXCEPTION_MSG_KEY, getErrMsg(e));
+		mv.addObject(Global.EXCEPTION_CODE_KEY, getErrCode(e));
+		mv.addObject(Global.EXCEPTION_MSG_KEY, getErrMsg(e));
 		mv.setViewName(errView);
 		return mv;
 	}

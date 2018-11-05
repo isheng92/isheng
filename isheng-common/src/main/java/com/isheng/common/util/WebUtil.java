@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.isheng.common.constant.Constant;
+import com.isheng.common.constant.Global;
 
 /**
  * web工具类
@@ -59,10 +59,10 @@ public final class WebUtil {
 	 * @return
 	 */
 	public static String getAgent(HttpServletRequest req) {
-		String agent = Constant.CLIENT_ANDORID;
-		String head = req.getHeader(Constant.AGENT_UA);
+		String agent = Global.CLIENT_ANDORID;
+		String head = req.getHeader(Global.AGENT_UA);
 		if ("os".equalsIgnoreCase(head)) {
-			agent = Constant.CLIENT_IOS;
+			agent = Global.CLIENT_IOS;
 		}
 		return agent;
 	}
@@ -89,7 +89,7 @@ public final class WebUtil {
 	public static Object toResponse(String content) {
 		HttpServletResponse response = getResponse();
 		response.setContentType("text/plain");
-		response.setCharacterEncoding(Constant.CHARSET);
+		response.setCharacterEncoding(Global.CHARSET);
 		PrintWriter writer = null;
 		try {
 			writer = response.getWriter();
@@ -126,12 +126,53 @@ public final class WebUtil {
 	}
 
 	/**
-	 * 获取当前 Session
+	 * 获取session
 	 * 
 	 * @return
 	 */
-	public static HttpSession getSession() {
+	public static HttpSession getHttpSession() {
 		return getRequest().getSession();
+	}
+
+	/**
+	 * 获取存放在会话中的对象
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static Object getSessionAttr(String key) {
+		return getHttpSession().getAttribute(key);
+	}
+
+	/**
+	 * 获取存放在会话中的已知类型的对象
+	 * 
+	 * @param key
+	 * @param clazz
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getSessionAttr(String key, Class<T> clazz) {
+		return (T) getSessionAttr(key);
+	}
+
+	/**
+	 * 设置会话属性
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public static void setSessionAttr(String key, Object value) {
+		getHttpSession().setAttribute(key, value);
+	}
+
+	/**
+	 * 移除会话属性
+	 * 
+	 * @param key
+	 */
+	public static void removeSessionAttr(String key) {
+		getHttpSession().removeAttribute(key);
 	}
 
 	/**

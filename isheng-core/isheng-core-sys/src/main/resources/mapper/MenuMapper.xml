@@ -2,7 +2,7 @@
 <!DOCTYPE mapper   
 PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
-<mapper namespace="com.isheng.core.sys.mapper.MenuMapper">
+<mapper namespace="com.isheng.core.sys.dao.mapper.MenuMapper">
 	<!-- 结果字段 -->
 	<sql id="columnSql">
 		id,
@@ -102,7 +102,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</sql>
 	
 	<!-- 插入 -->
-	<insert id="insert" parameterType="com.isheng.core.sys.entity.Menu">
+	<insert id="insert">
 		insert into menu (<include refid="columnSql"/>) values (<include refid="insertSql"/>)
 	</insert>
 
@@ -120,24 +120,29 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<select id="selectOne" resultType="com.isheng.core.sys.entity.Menu" timeout="3000">
 		select <include refid="columnSql" /> from menu where id=#{id}
 	</select>
+	
+	<!-- 查询根权限 -->
+	<select id="selectRoots" resultType="com.isheng.core.sys.entity.Menu" timeout="3000">
+		select <include refid="columnSql" /> from menu where parentId is null
+	</select>
 
 	<!-- 总记录数 -->
-	<select id="selectCount" parameterType="com.isheng.model.auth.request.MenuQuery" resultType="java.lang.Long" timeout="3000">
+	<select id="selectCount" parameterType="com.isheng.core.sys.query.MenuQuery" resultType="java.lang.Long" timeout="3000">
 		select count(id) from menu <include refid="querySql"/>
 	</select>
 	
 	<!-- 查询所有 -->
-	<select id="selectAll" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectAll" resultType="com.isheng.core.sys.entity.Menu" timeout="3000">
 		select <include refid="columnSql"/> from menu;
 	</select>
 	
 	<!-- 条件查询 -->
-	<select id="selectList" parameterType="com.isheng.model.auth.request.MenuQuery" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectList" parameterType="com.isheng.core.sys.query.MenuQuery"  timeout="3000">
 		select <include refid="columnSql"/> from menu <include refid="querySql"/>
 	</select>
 	
 	<!-- 分页查询 -->
-	<select id="selectLimit" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectLimit" timeout="3000">
 		select <include refid="columnSql"/> from menu <include refid="querySql"/> order by sort ASC limit #{pageNo}, #{pageSize}
 	</select>
 	
@@ -147,7 +152,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<!-- 查询用户的所有权限 -->
-	<select id="selectByUserId" parameterType="java.lang.String" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectByUserId" parameterType="java.lang.String"  timeout="3000">
 		select <include refid="columnSql"/> from menu where id in 
 		( select menuId from roleMenu where roleId in 
 			( select roleId from userRole where userId = #{userId} )
@@ -155,12 +160,12 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<!-- 查询角色的所有权限 -->
-	<select id="selectByRoleId" parameterType="java.lang.String" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectByRoleId" parameterType="java.lang.String"  timeout="3000">
 		select <include refid="columnSql"/> from menu where id in (select menuId from roleMenu where roleId = #{roleId})
 	</select>
 	
 	<!-- 查询多个角色的多个权限 -->
-	<select id="selectByRoles" parameterType="list" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectByRoles" parameterType="list"  timeout="3000">
 		select <include refid="columnSql"/> from menu where id in 
 		(select menuId from roleMenu where roleId in 
 			(

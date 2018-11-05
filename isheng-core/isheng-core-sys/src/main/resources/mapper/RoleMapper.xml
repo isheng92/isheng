@@ -2,30 +2,36 @@
 <!DOCTYPE mapper   
 PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
-<mapper namespace="com.isheng.dao.mapper.auth.RoleMapper">
+<mapper namespace="com.isheng.core.sys.mapper.RoleMapper">
 	<sql id="columnSql">
-		id, 
+		id,
+		name, 
+		remark, 
 		createUser, 
 		createTime, 
 		updateUser, 
-		updateTime, 
-		name, 
-		remark
+		updateTime
 	</sql>
 	
 	<sql id="insertSql">
-		#{id}, 
+		#{id},
+		#{name}, 
+		#{remark}, 
 		#{createUser}, 
 		#{createTime}, 
 		#{updateUser}, 
-		#{updateTime}, 
-		#{name}, 
-		#{remark}
+		#{updateTime}
 	</sql>
 	
 	<!-- 更新字段 -->
 	<sql id="updateSql">
 		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
 			<if test="createUser != null">
 				createUser = #{createUser},
 			</if>
@@ -38,12 +44,6 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			<if test="updateTime != null">
 				updateTime = #{updateTime},
 			</if>
-			<if test="name != null">
-				name = #{name},
-			</if>
-			<if test="remark != null">
-				remark = #{remark},
-			</if>
 		</trim>
 	</sql>
 	
@@ -52,6 +52,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<where>
 			<if test="id != null">
 				and id = #{id}
+			</if>
+			<if test="name != null">
+				and name=#{name}
 			</if>
 			<if test="createUser != null">
 				and createUser like CONCAT('%', #{createUser}, '%')
@@ -65,15 +68,11 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			<if test="endDate != null">
 				and createTime &lt;= #{endDate, jdbcType=TIMESTAME}
 			</if>
-			
-			<if test="name != null">
-				and name=#{name}
-			</if>
 		</where>
 	</sql>
 	
 	<!-- 插入 -->
-	<insert id="insert" parameterType="com.isheng.model.auth.entity.Role">
+	<insert id="insert" parameterType="com.isheng.core.sys.entity.Role">
 		insert into role (<include refid="columnSql"/>) values (<include refid="insertSql"/>)
 	</insert>
 
@@ -83,37 +82,37 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</delete>
 	
 	<!-- 更新 -->
-	<update id="update" parameterType="com.isheng.model.auth.entity.Role" timeout="3000">
+	<update id="update" parameterType="com.isheng.core.sys.entity.Role" timeout="3000">
 		update role <include refid="updateSql"/> where id = #{id}
 	</update>
 	
 	<!-- 根据ID查询 -->
-	<select id="selectOne" resultType="com.isheng.model.auth.entity.Role" timeout="3000">
+	<select id="selectOne" resultType="com.isheng.core.sys.entity.Role" timeout="3000">
 		select <include refid="columnSql" /> from role where id=#{id}
 	</select>
 
 	<!-- 总记录数 -->
-	<select id="selectCount" parameterType="com.isheng.model.auth.request.RoleQuery" resultType="java.lang.Long" timeout="3000">
+	<select id="selectCount" parameterType="com.isheng.core.sys.query.RoleQuery" resultType="java.lang.Long" timeout="3000">
 		select count(id) from role <include refid="querySql"/>
 	</select>
 	
 	<!-- 查询所有 -->
-	<select id="selectAll" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectAll" timeout="3000">
 		select <include refid="columnSql"/> from role;
 	</select>
 	
 	<!-- 条件查询 -->
-	<select id="selectList" parameterType="com.isheng.model.auth.request.RoleQuery" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectList" parameterType="com.isheng.core.sys.query.RoleQuery" timeout="3000">
 		select <include refid="columnSql"/> from role <include refid="querySql"/>
 	</select>
 	
 	<!-- 分页查询 -->
-	<select id="selectLimit" parameterType="com.isheng.model.auth.request.RoleQuery" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectLimit" parameterType="com.isheng.core.sys.query.RoleQuery" timeout="3000">
 		select <include refid="columnSql"/> from role <include refid="querySql"/> order by sort ASC limit #{pageNo}, #{pageSize}
 	</select>
 	
 	<!-- 查询用户的所有角色信息 -->
-	<select id="selectByUserId" parameterType="java.lang.String" resultMap="mapperResultMap" timeout="3000">
+	<select id="selectByUserId" parameterType="java.lang.String" timeout="3000">
 		select <include refid="columnSql"/> from role where id in (select roleId from userRole where userId = #{userId})
 	</select>
 	

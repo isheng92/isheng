@@ -10,7 +10,7 @@ import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 @EnableAsync
 @EnableScheduling
 @EnableDubboConfiguration
-@SpringBootApplication(scanBasePackages= {"com.isheng.server.sys"})
+@SpringBootApplication(scanBasePackages= {"com.isheng.core.sys"})
 public class SysCoreApplication {
 
 	public static void main(String[] args) {

@@ -8,7 +8,20 @@ if (!INDEX) {
  */
 INDEX.url = {
 	login: "/login",
+	loadRoot: "/loadRoot",
 	loadMenu: "/loadMenu"
+}
+
+/**
+ * 加载顶部根菜单
+ * @returns
+ */
+function loadRootMenu() {
+	$.post(INDEX.url.loadRoot, function(data) {
+		$("#headerNav").html(data);
+	}).fail(function(err) {
+		alertErr("用户根菜单加载失败！");
+	});
 }
 
 /**
@@ -43,5 +56,6 @@ function menuClick(obj) {
 }
 
 $(function() {
+	loadRootMenu();
 	loadMenu();
 })

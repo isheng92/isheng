@@ -2,10 +2,7 @@ package com.isheng.common.base;
 
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
-
-import com.isheng.common.exception.BizException;
 import com.isheng.common.idgen.IdGenerate;
 import com.isheng.common.util.ReflexUtil;
 
@@ -19,7 +16,7 @@ public abstract class AbstractBaseDao<T, Q extends BaseQuery> implements BaseDao
 	protected abstract BaseMapper<T, Q> getMapper();
 
 	@Override
-	public String save(T entity) throws BizException {
+	public String save(T entity) {
 		String id = IdGenerate.nextId();
 		ReflexUtil.setFieldValue(entity, "id", id);//通过反射设置id
 		ReflexUtil.setFieldValue(entity, "createTime", new Date());//通过反射设置createTime
@@ -28,43 +25,43 @@ public abstract class AbstractBaseDao<T, Q extends BaseQuery> implements BaseDao
 	};
 
 	@Override
-	public int delete(String id) throws BizException {
+	public int delete(String id) {
 		return this.getMapper().delete(id);
 	}
 
 	@Override
-	public int update(T entity) throws BizException {
+	public int update(T entity){
 		ReflexUtil.setFieldValue(entity, "updateTime", new Date());
 		return this.getMapper().update(entity);
 	}
 
 	@Override
-	public T getOne(String id) throws BizException {
+	public T getOne(String id) {
 		return this.getMapper().selectOne(id);
 	}
 
 	@Override
-	public long getCount(Q query) throws BizException {
+	public long getCount(Q query) {
 		return this.getMapper().selectCount(query);
 	}
 	
 	@Override
-	public List<T> getAll() throws BizException {
+	public List<T> getAll() {
 		return this.getMapper().selectAll();
 	}
 
 	@Override
-	public List<T> getList(Q query) throws BizException {
+	public List<T> getList(Q query) {
 		return this.getMapper().selectList(query);
 	}
 
 	@Override
-	public List<T> getLimit(Q query, int pageNo, int pageSize) throws BizException {
+	public List<T> getLimit(Q query, int pageNo, int pageSize) {
 		return this.getMapper().selectLimit(query, pageNo, pageSize);
 	}
 
 	@Override
-	public boolean isExist(String id, String column, Object value) throws BizException {
+	public boolean isExist(String id, String column, Object value) {
 		if (StringUtils.isEmpty(id)) {
 			id = "";
 		}

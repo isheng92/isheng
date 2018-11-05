@@ -1,7 +1,6 @@
 package com.isheng.common.base;
 
 import java.util.List;
-import com.isheng.common.exception.BizException;
 import com.isheng.common.model.Page;
 
 /**
@@ -19,7 +18,7 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @return
 	 * @throws BizException
 	 */
-	String add(T entity) throws BizException;
+	String add(T entity);
 	
 	/**
 	 * 删除
@@ -28,7 +27,7 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @return
 	 * @throws BizException
 	 */
-	int deleteById(String id) throws BizException;
+	int deleteById(String id);
 	
 	/**
 	 * 更新
@@ -37,7 +36,7 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @return
 	 * @throws BizException
 	 */
-	int update(T entity) throws BizException;
+	int update(T entity);
 	
 	/**
 	 * 根据ID查询
@@ -46,7 +45,7 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @return
 	 * @throws BizException
 	 */
-	T getById(String id) throws BizException;
+	T getById(String id);
 	
 	/**
 	 * 获取满足条件的记录数
@@ -55,14 +54,14 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @return
 	 * @throws BizException
 	 */
-	long getCount(Q query) throws BizException;
+	long getCount(Q query);
 	
 	/**
 	 * 查询所有
 	 * @return
 	 * @throws BizException
 	 */
-	List<T> getAll() throws BizException;
+	List<T> getAll();
 	
 	/**
 	 * 根据条件查询
@@ -71,7 +70,7 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @return
 	 * @throws BizException
 	 */
-	List<T> getList(Q query) throws BizException;
+	List<T> getList(Q query);
 	
 	/**
 	 * 分页查询
@@ -82,7 +81,7 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @return
 	 * @throws BizException
 	 */
-	Page<T> getPaging(Q query, int pageNo, int pageSize) throws BizException;
+	Page<T> getPaging(Q query, int pageNo, int pageSize);
 	
 	/**
 	 * 查询指定的值是否有相同
@@ -90,5 +89,5 @@ public interface BaseService <T, Q extends BaseQuery>{
 	 * @param id
 	 * @return
 	 */
-	boolean isExist(String id, String column, Object value) throws BizException;
+	boolean isExist(String id, String column, Object value);
 }

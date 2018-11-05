@@ -31,7 +31,25 @@ $("#openClose").click(function(){
 	}
 });
 
+
+/**
+ * 加载顶部根菜单
+ * @returns
+ */
+function loadRootMenu() {
+	$.post("/loadRootMenu", function(data) {
+		$("#headerNav").html(data);
+	}).fail(function(err) {
+		alertErr("用户根菜单加载失败！");
+	});
+}
+
 $(document).ready(function() {
+	/**
+	 * 加载根导航菜单
+	 */
+	loadRootMenu();
+	
 	// 绑定菜单单击事件
 	$("#menu a.menu").click(function(){
 		// 一级菜单焦点
@@ -108,6 +126,7 @@ $(document).ready(function() {
 		wSizeWidth();
 		return false;
 	});
+	
 	// 初始化点击第一个一级菜单
 	$("#menu a.menu:first span").click();
 	// 
