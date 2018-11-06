@@ -1,18 +1,18 @@
 package com.isheng.web.admin.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.isheng.common.base.BaseController;
 import com.isheng.common.constant.Global;
+import com.isheng.common.exception.BizException;
 import com.isheng.common.util.WebUtil;
 import com.isheng.core.sys.entity.Menu;
 import com.isheng.core.sys.pojo.SessionUser;
-import com.isheng.core.sys.query.MenuQuery;
 import com.isheng.core.sys.service.MenuService;
 import com.isheng.core.sys.service.UserService;
 
@@ -25,6 +25,8 @@ import com.isheng.core.sys.service.UserService;
  */
 @Controller
 public class IndexController extends AbstractBaseController {
+	
+	private static final String PREFIX_PATH = "/common";
 	
 	@Reference
 	private UserService userService;
@@ -45,34 +47,57 @@ public class IndexController extends AbstractBaseController {
 		return gto;
 	}
 	
-	@RequestMapping("/loadRootMenu")
-	public ModelAndView loadRootMenu() {
-		ModelAndView mv = new ModelAndView();
+	/**
+	 * 获取用户的所有菜单或者下级菜单
+	 * 
+	 * @param userId
+	 */
+	@SuppressWarnings("unchecked")
+	private List<Menu> loadUserMenu(String parentId) {
+		List<Menu> menus = WebUtil.getSessionAttr(Global.MENU_ALL_KEY, List.class);
+		if (null == menus || menus.isEmpty()) {
+			SessionUser sessionUser = getCurrentUser();
+			menus = menuService.getMenuTree(null);//menuService.getMenuTree(sessionUser.getUserId());
+			WebUtil.setSessionAttr(Global.MENU_ALL_KEY, menus);
+		}
 		
-//		SessionUser sessionUser = getCurrentUser();
+		if (!StringUtils.isEmpty(parentId)) {
+			for (Menu m : menus) {
+				if (parentId.equals(m.getId())) {
+					menus = m.getChildList();
+					break;
+				}
+			}
+		}
 		
-		List<Menu> roots = menuService.getRoots(null);//menuService.getRoots(sessionUser.getUserId());
-		mv.setViewName("/common/header-nav");
-		mv.addObject("menuList", roots);
-		return mv;
+		return (null != menus ) ? menus : new ArrayList<>(0);
 	}
 	
 	/**
-	 * 加载导航菜单
+	 * 获取用户根目录
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@RequestMapping("/loadRoot")
+	public String loadRootMenu(Model model) {
+		List<Menu> roots = this.loadUserMenu(null);
+		model.addAttribute("menuList", roots);
+		return PREFIX_PATH + "/header-nav";
+	}
+	
+	/**
+	 * 获取指定ID的下级菜单
+	 * 
+	 * @return
+	 */
 	@RequestMapping("/loadMenu")
-	public ModelAndView loadMenu(HttpServletRequest req) {
-		ModelAndView mv = new ModelAndView();
-		List<Menu> list = WebUtil.getSessionAttr(Global.MENU_USER_KEY, List.class);
-		if (null == list || list.isEmpty()) {
-			list = menuService.getMenuTree(null);//this.initMenu();
+	public String loadMenu(Model model, String parentId) {
+		if (StringUtils.isEmpty(parentId)) {
+			throw new BizException("父级菜单ID为空！");
 		}
-		mv.setViewName("/common/left");
-		mv.addObject("menuList", list);
-		return mv;
+		List<Menu> menus = this.loadUserMenu(parentId);
+		model.addAttribute("menuList", menus);
+		return PREFIX_PATH + "/left";
 	}
 	
 }

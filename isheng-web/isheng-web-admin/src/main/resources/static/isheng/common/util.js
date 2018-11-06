@@ -84,40 +84,6 @@ function responseCode (response) {
 }
 
 /**
- * post请求
- * @param _url
- * @param _params
- * @returns
- */
-function httpPost(_url, _params) {
-	var params = _params || {};
-	$.post(_url, {
-		params: JSON.stringify(params)
-	}).done(function(data) {
-		return data;
-	}).fail(function(err) {
-		return err;
-	});
-}
-
-/**
- * get请求
- * @param _url
- * @param _params
- * @returns
- */
-function httpGet(_url, _params) {
-	var params = _params || {};
-	$.get(_url, {
-		params: JSON.stringify(params)
-	}).done(function(data) {
-		return data;
-	}).fail(function(err) {
-		return err;
-	});
-}
-
-/**
  * 后台是否处理成功
  * @param response
  * @returns {Boolean}

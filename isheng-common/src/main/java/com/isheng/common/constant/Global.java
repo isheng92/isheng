@@ -40,13 +40,11 @@ public class Global {
 	/** header中设置的session状态key */
 	public static final String SESSION_STATUS_KEY = "sessionStatus";
 	
-	public static final String MENU_ROOT_KEY = "rootMenu";
+	/** 用户的根目录key */
+	public static final String MENU_ROOT_KEY = "menu_root_key";
 	
-	public static final String MENU_MENU_KEY = "menuMenu";
-	
-	public static final String MENU_BUTTON_KEY = "buttonMenu";
-	
-	public static final String MENU_USER_KEY = "userMenu";
+	/** 用户的所有目录 */
+	public static final String MENU_ALL_KEY = "menu_all_key";
 	
 	public static final String PERMISSIONS = "permissions";
 
