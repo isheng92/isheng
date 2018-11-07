@@ -24,7 +24,7 @@ function loadRootMenu() {
 $('body').on("click", "#menu li.menu", function() {
 	$("#menu li.menu").removeClass("active");
 	$(this).parent().addClass("active");
-	var parentId = $(this).attr("data-id");
+	var parentId = $(this).children("a").attr("data-id");
 	if (!parentId) {
 		alertErr("菜单ID为空!");
 		return;
@@ -41,30 +41,19 @@ function showLeftMenu(parentId) {
 	var menuId = "#menu-" + parentId;
 	var menuNode = $(menuId);
 	
-	alert(menuId);
-	
 	$("#left .accordion").hide();
-	if (!menuNode || menuNode.length > 0) {
+	if (menuNode && menuNode.length > 0) {
 		menuNode.show();
 	} else {
-		loadSecondMenu(parentId);
+		$.post(indexJs.url.loadMenu, {
+			'parentId': parentId
+		}, function(data) {
+			alert(data);
+			$("#left").html(data);
+		})
 	}
 }
 
-/**
- * 加载二级菜单
- * @param parentId
- * @returns
- */
-function loadSecondMenu(parentId) {
-	$.post(indexJs.url.loadMenu,{
-		'parentId': parentId
-	}).done(function(data) {
-		$("#left").html(data);
-	}).fail(function() {
-		alertErr("二级菜单加载失败！");
-	})
-}
 
 $(document).ready(function() {
 	loadRootMenu();

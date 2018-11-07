@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<div class="accordion" id="menu-62" style="display: none;">
+<div class="accordion" th:id="'menu-' + ${menu.id}" th:each="menu, menuStat:${menuList}">
   <div class="accordion-group">
     <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse"
