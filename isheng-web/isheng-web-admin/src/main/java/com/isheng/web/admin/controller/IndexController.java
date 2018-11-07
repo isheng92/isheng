@@ -9,12 +9,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.isheng.common.constant.Global;
+import com.isheng.common.enums.ErrMsg;
 import com.isheng.common.exception.BizException;
+import com.isheng.common.model.ResultModel;
 import com.isheng.common.util.WebUtil;
 import com.isheng.core.sys.entity.Menu;
 import com.isheng.core.sys.pojo.SessionUser;
 import com.isheng.core.sys.service.MenuService;
 import com.isheng.core.sys.service.UserService;
+import com.isheng.web.admin.common.ShiroUtil;
 
 /**
  * 首页
@@ -98,6 +101,18 @@ public class IndexController extends AbstractBaseController {
 		List<Menu> menus = this.loadUserMenu(parentId);
 		model.addAttribute("menuList", menus);
 		return PREFIX_PATH + "/left";
+	}
+	
+	/**
+	 * 登出
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/logout")
+	public Object logout() {
+		ResultModel result = new ResultModel();
+		ShiroUtil.logout();
+		return result.setCode(ErrMsg.SUCCESS.getCode()).setMsg("退出成功").addData(Global.GOTO_KEY, "index");
 	}
 	
 }

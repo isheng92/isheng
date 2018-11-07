@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" style="overflow-x:auto;overflow-y:auto;">
 <ul id="menu" class="nav" style="*white-space: nowrap; float: none;">
-	<li th:each="menu, menuStat:${menuList}" th:class="${menuStat.index==0} ? 'menu active' : 'menu'">
+	<li th:each="menu, menuStat:${menuList}" class="menu" th:classappend="${menuStat.index==0} ? 'active' : ''">
 		<a class="menu" href="javascript:" th:attr="data-id=${menu.id}, data-href='/loadMenu?parentId=' + ${menu.id}"><span th:text="${menu.name}"></span></a>
 	</li>
 </ul>
